@@ -91,6 +91,21 @@ function history_upload_wills() { ?>
 
           wp_update_attachment_metadata( $attachId, $attachData );
 
+          // Create post object
+          $myPost = array(
+            'post_title'    => preg_replace('/\.[^.]+$/', '', $zip->getNameIndex($i)),
+            'post_type'     => 'will',
+            'post_content'  => '',
+            'post_status'   => 'publish',
+            'post_author'   => 1,
+            'meta_input'    => array(
+              'custom_pdf'  => $fileName
+            )
+          );
+
+          // Insert the post into the database
+          wp_insert_post( $myPost );
+
         } else {
           echo $zip->getNameIndex($i) . " could not be uploaded. Its file type of " . $fileType['type'] . " is not allowed";
         }
