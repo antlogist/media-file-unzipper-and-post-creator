@@ -61,14 +61,14 @@ function history_upload_wills() { ?>
 
         //Get the URL of the media file.
         $fileName = wp_upload_dir()['url'] . '/' . $zip->getNameIndex($i);
-        echo "<p>File name" . $fileName . "</p>";
+        echo "<p>File url: " . $fileName . "</p>";
 
         //Get the file type
         $fileType 	= wp_check_filetype( basename( $fileName ), null );
-        echo "<p>File type" . $fileType . "</p>";
+        echo "<p>File type: " . $fileType['type'] . "</p>";
 
         //Check the file type
-        $allowed 	= history_allowed_file_types($filetype['type']);
+        $allowed 	= history_allowed_file_types($fileType['type']);
 
         if($allowed) {
           //File link
@@ -92,7 +92,7 @@ function history_upload_wills() { ?>
           wp_update_attachment_metadata( $attachId, $attachData );
 
         } else {
-          echo $zip->getNameIndex($i) . " could not be uploaded. Its file type of " . $fileType['type'] . "is not allowed";
+          echo $zip->getNameIndex($i) . " could not be uploaded. Its file type of " . $fileType['type'] . " is not allowed";
         }
 
       }
