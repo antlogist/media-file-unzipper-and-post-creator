@@ -18,11 +18,11 @@ class File {
 
   static function unzipAndPost() {
     self::init();
-    echo self::$file;
-    exit;
+    self::uploadZip();
   }
 
-  private function uploadZip() {
-    // echo "../../wp-content/uploads" . wp_upload_dir()['subdir'];
+  private static function uploadZip() {
+    move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], self::$file);
   }
+
 }
