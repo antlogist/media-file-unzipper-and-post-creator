@@ -1,11 +1,11 @@
 <?php
 
 class Render {
-  static function form() {
+  static function form($slug = 'history_upload_wills') {
     echo '
       <div class="wrap">
         <h1>Upload ZIP Archive with PDF files inside</h1>
-        <form action="./admin.php?page=history_upload_wills" method="post" enctype="multipart/form-data" class="server-form">
+        <form action="./admin.php?page=' . $slug . '" method="post" enctype="multipart/form-data" class="server-form">
 
           <p>
             <input type="file" name="fileToUpload" id="fileToUpload">
@@ -18,5 +18,9 @@ class Render {
         </form>
       </div>
     ';
+  }
+
+  static function message() {
+
   }
 }
