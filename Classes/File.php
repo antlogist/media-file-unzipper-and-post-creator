@@ -4,10 +4,8 @@ class File {
   private $isAllowed = false;
   private $type;
 
-  public function __construct($type) {
-    $this->type = $type;
+  static function unzipAndPost() {
+    var_dump("Test");
+    exit;
   }
-
-
-
 }
