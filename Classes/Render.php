@@ -20,7 +20,17 @@ class Render {
     ';
   }
 
-  static function message() {
-
+  static function message($messages) {
+    foreach($messages as $message) {
+      if ($message->type == 'success') {
+        echo '<p style="color: green; padding-left: 1rem;">'. $message->text .'</p>';
+      }
+      elseif ($message->type == 'error') {
+        echo '<p style="color: red; padding-left: 1rem;">'. $message->text .'</p>';
+      }
+      elseif ($message->type == 'info') {
+        echo '<p style="color: blue; padding-left: 1rem;">'. $message->text .'</p>';
+      }
+    }
   }
 }
