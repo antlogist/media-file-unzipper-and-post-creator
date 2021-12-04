@@ -88,6 +88,13 @@ class File {
   private static function addToLibAndPost() {
     for($i=0; $i < self::$numFiles; $i++) {
 
+      $message = [];
+      $message[] = (object)[
+        'type' => 'info',
+        'text' => '========================'
+      ];
+      Render::message($message);
+
       $title = preg_replace('/\.[^.]+$/', '', self::$zip->getNameIndex($i));
 
       if(!FileHelper::isTitleUnique($title)) {
