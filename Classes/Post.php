@@ -1,13 +1,13 @@
 <?php
 
 class Post {
-  protected $title;
+  protected $postTitle;
   protected $postContent;
   protected $postStatus;
   protected $postAuthor;
 
-  public function __construct($title = '', $postContent = '', $postStatus = 'publish', $postAuthor = 1) {
-    $this->title = $title;
+  public function __construct($postTitle = '', $postContent = '', $postStatus = 'publish', $postAuthor = 1) {
+    $this->postTitle = $postTitle;
     $this->postContent = $postContent;
     $this->postStatus = $postStatus;
     $this->postAuthor = $postAuthor;

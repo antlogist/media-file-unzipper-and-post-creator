@@ -156,6 +156,26 @@ class File {
         //Update metadata for an attachment.
         wp_update_attachment_metadata( $attachId, $attachData );
 
+        //Create post
+        $post = new PostPdf($title, '', 'publish', 1, 'will', 'custom_pdf', $fileUrl);
+        $postId = $post->createPost();
+
+        if($postId) {
+          $message = [];
+          $message[] = (object)[
+            'type' => 'success',
+            'text' => 'Post was successfully created. ID ' . $postId
+          ];
+          Render::message($message);
+        } else {
+          $message = [];
+          $message[] = (object)[
+            'type' => 'error',
+            'text' => 'Post was not successfully created. Something went wrong...'
+          ];
+          Render::message($message);
+        }
+
       } else {
 
         $message = [];
