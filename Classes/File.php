@@ -2,6 +2,7 @@
 
 require_once plugin_dir_path( __FILE__ ) . 'FileHelper.php';
 require_once plugin_dir_path( __FILE__ ) . 'Render.php';
+require_once plugin_dir_path( __FILE__ ) . 'PostPdf.php';
 
 class File {
   private static $dir ;
