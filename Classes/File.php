@@ -88,17 +88,17 @@ class File {
     for($i=0; $i < self::$numFiles; $i++) {
 
       //Get the URL of the media file.
-      $fileName = wp_upload_dir()['url'] . '/' . self::$zip->getNameIndex($i);
+      $fileUrl = wp_upload_dir()['url'] . '/' . self::$zip->getNameIndex($i);
 
       $message = [];
       $message[] = (object)[
         'type' => 'info',
-        'text' => 'File url: ' . $fileName
+        'text' => 'File url: ' . $fileUrl
       ];
       Render::message($message);
 
       //Get the file type
-      $fileType 	= wp_check_filetype( basename( $fileName ), null );
+      $fileType 	= wp_check_filetype( basename( $fileUrl ), null );
 
       $message = [];
       $message[] = (object)[
@@ -113,14 +113,14 @@ class File {
         $message = [];
         $message[] = (object)[
           'type' => 'success',
-          'text' => '<a href="' . $fileName . '" target="_blank"> '. $fileName . '</a> File type: ' . $fileType['type']
+          'text' => '<a href="' . $fileUrl . '" target="_blank"> '. $fileUrl . '</a> File type: ' . $fileType['type']
         ];
         Render::message($message);
 
 
         //Attachment information
         $attachment = array(
-          'guid'           => $fileName,
+          'guid'           => $fileUrl,
           'post_mime_type' => $fileType['type'],
           'post_title'     => preg_replace('/\.[^.]+$/', '', self::$zip->getNameIndex($i)),
           'post_content'   => '',
