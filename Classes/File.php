@@ -48,7 +48,7 @@ class File {
     $zip = new ZipArchive;
 
     //Attempt to open the zip file.
-    if(!$zip->open(self::$file)) {
+    if($zip->open(self::$file) !== true) {
 
       $message[] = (object)[
         'type' => 'error',
