@@ -1,5 +1,6 @@
 <?php
 
+require_once plugin_dir_path( __FILE__ ) . 'FileHelper.php';
 require_once plugin_dir_path( __FILE__ ) . 'Render.php';
 
 class File {
@@ -87,6 +88,17 @@ class File {
   private static function addToLibAndPost() {
     for($i=0; $i < self::$numFiles; $i++) {
 
+      $title = preg_replace('/\.[^.]+$/', '', self::$zip->getNameIndex($i));
+
+      if(!FileHelper::isTitleUnique($title)) {
+        $message = [];
+        $message[] = (object)[
+          'type' => 'error',
+          'text' => 'File title: ' . $title . ' not unique'
+        ];
+        Render::message($message);
+      }
+
       //Get the URL of the media file.
       $fileUrl = wp_upload_dir()['url'] . '/' . self::$zip->getNameIndex($i);
 
@@ -122,7 +134,7 @@ class File {
         $attachment = array(
           'guid'           => $fileUrl,
           'post_mime_type' => $fileType['type'],
-          'post_title'     => preg_replace('/\.[^.]+$/', '', self::$zip->getNameIndex($i)),
+          'post_title'     => $title,
           'post_content'   => '',
           'post_status'    => 'inherit'
         );
