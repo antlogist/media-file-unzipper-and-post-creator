@@ -11,6 +11,7 @@ class File {
   private static $numFiles;
   private static $zip;
   private static $allowedFileTypes = ['application/pdf'];
+  private static $maxFiles = 5;
 
   private static function init() {
     //Get upload directory with year and month
@@ -63,6 +64,17 @@ class File {
     }
 
     self::$numFiles = $zip->numFiles;
+
+    if(self::$numFiles > self::$maxFiles) {
+      $message[] = (object)[
+        'type' => 'error',
+        'text' => 'Files quantity must be no greater than ' . $maxFiles . '.'
+      ];
+
+      $zip->close();
+      Render::message($message);
+      exit;
+    }
 
     //Extract zip if it can be open
     $zip->extractTo(self::$dir);
