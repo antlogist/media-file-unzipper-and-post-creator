@@ -137,7 +137,6 @@ class File {
         ];
         Render::message($message);
 
-
         //Attachment information
         $attachment = array(
           'guid'           => $fileUrl,
@@ -146,6 +145,9 @@ class File {
           'post_content'   => '',
           'post_status'    => 'inherit'
         );
+
+        //Absolute path to file
+        $pathToFile = self::$dir . '/' . self::$zip->getNameIndex($i);
 
         //Insert the attachment.
         $attachId = wp_insert_attachment( $attachment, self::$dir . '/' . self::$zip->getNameIndex($i) );
@@ -157,7 +159,7 @@ class File {
         wp_update_attachment_metadata( $attachId, $attachData );
 
         //Create post
-        $post = new PostPdf($title, '', 'publish', 1, 'will', 'custom_pdf', $fileUrl);
+        $post = new PostPdf($title, '', 'publish', 1, 'will', 'custom_pdf', $fileUrl, $pathToFile);
         $postId = $post->createPost();
 
         if($postId) {
