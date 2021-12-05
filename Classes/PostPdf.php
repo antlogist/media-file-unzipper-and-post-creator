@@ -1,18 +1,19 @@
 <?php
-
 require_once plugin_dir_path( __FILE__ ) . 'Post.php';
 
 class PostPdf extends Post {
   protected $postType;
   protected $customPdf;
   protected $pdfFileUrl;
+  protected $pathToFile;
   protected $postId = 0;
 
-  function __construct($postTitle, $postContent, $postStatus, $postAuthor, $postType = 'will', $customPdf = 'custom_pdf', $pdfFileUrl = '') {
+  function __construct($postTitle, $postContent, $postStatus, $postAuthor, $postType = 'will', $customPdf = 'custom_pdf', $pdfFileUrl = '', $pathToFile = '') {
     parent::__construct($postTitle, $postContent, $postStatus, $postAuthor);
     $this->postType = $postType;
     $this->customPdf = $customPdf;
     $this->pdfFileUrl = $pdfFileUrl;
+    $this->pathToFile = $pathToFile;
   }
 
   private function insertPost() {
@@ -23,11 +24,21 @@ class PostPdf extends Post {
       'post_status'   => $this->postStatus,
       'post_author'   => $this->postAuthor,
       'meta_input'    => array(
-      $this->customPdf  => $this->pdfFileUrl
+        $this->customPdf  => $this->pdfFileUrl
       )
     );
 
+    $this->createThumbnail();
+
     $this->postId = wp_insert_post($postData);
+
+  }
+
+  private function createThumbnail() {
+
+    $im = new imagick($this->pathToFile);
+    $im->clear();
+    $im->destroy();
 
   }
 
