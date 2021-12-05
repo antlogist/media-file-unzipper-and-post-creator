@@ -7,6 +7,7 @@ class PostPdf extends Post {
   protected $pdfFileUrl;
   protected $pathToFile;
   protected $postId = 0;
+  protected $imgUrl;
 
   function __construct($postTitle, $postContent, $postStatus, $postAuthor, $postType = 'will', $customPdf = 'custom_pdf', $pdfFileUrl = '', $pathToFile = '') {
     parent::__construct($postTitle, $postContent, $postStatus, $postAuthor);
@@ -46,11 +47,39 @@ class PostPdf extends Post {
     return $this->postTitle;
   }
 
+  private function transformIntoUrl() {
+    $imgUrl = str_replace('[', '', $this->postTitle);
+    $imgUrl = str_replace(']', '', $imgUrl);
+    $imgUrl = str_replace('.', '-', $imgUrl);
+    $imgUrl = str_replace(' ', '-', $imgUrl);
+    $imgUrl = $imgUrl . '-pdf-724x1024.jpg';
+    $this->imgUrl = $imgUrl;
+    return $this->imgUrl;
+  }
+
   private function createThumbnail() {
 
     $im = new imagick($this->pathToFile);
     $im->clear();
     $im->destroy();
+
+    //Attachment information
+    $attachment = array(
+      'guid'           => $this->transformIntoUrl(),
+      'post_mime_type' => 'image/jpeg',
+      'post_title'     => $this->transformTitle(),
+      'post_content'   => '',
+      'post_status'    => 'inherit'
+    );
+
+    //Insert the attachment.
+    $imageId = wp_insert_attachment( $attachment, "../wp-content/uploads" . wp_upload_dir()['subdir'] . '/' . $this->imgUrl);
+
+    //Generate attachment metadata
+    $imageData = wp_generate_attachment_metadata($imageId,  "../wp-content/uploads" . wp_upload_dir()['subdir'] . '/' . $this->imgUrl);
+
+    //Update metadata for an attachment.
+    wp_update_attachment_metadata( $imageId, $imageData );
 
   }
 
