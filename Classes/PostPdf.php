@@ -8,6 +8,7 @@ class PostPdf extends Post {
   protected $pathToFile;
   protected $postId = 0;
   protected $imgUrl;
+  protected $thumbnailId;
 
   function __construct($postTitle, $postContent, $postStatus, $postAuthor, $postType = 'will', $customPdf = 'custom_pdf', $pdfFileUrl = '', $pathToFile = '') {
     parent::__construct($postTitle, $postContent, $postStatus, $postAuthor);
@@ -32,6 +33,8 @@ class PostPdf extends Post {
     $this->createThumbnail();
 
     $this->postId = wp_insert_post($postData);
+
+    set_post_thumbnail($this->postId, $this->thumbnailId);
 
   }
 
@@ -73,13 +76,14 @@ class PostPdf extends Post {
     );
 
     //Insert the attachment.
-    $imageId = wp_insert_attachment( $attachment, "../wp-content/uploads" . wp_upload_dir()['subdir'] . '/' . $this->imgUrl);
+    $this->thumbnailId = wp_insert_attachment( $attachment, "../wp-content/uploads" . wp_upload_dir()['subdir'] . '/' . $this->imgUrl);
+
 
     //Generate attachment metadata
-    $imageData = wp_generate_attachment_metadata($imageId,  "../wp-content/uploads" . wp_upload_dir()['subdir'] . '/' . $this->imgUrl);
+    $imageData = wp_generate_attachment_metadata($this->thumbnailId,  "../wp-content/uploads" . wp_upload_dir()['subdir'] . '/' . $this->imgUrl);
 
     //Update metadata for an attachment.
-    wp_update_attachment_metadata( $imageId, $imageData );
+    wp_update_attachment_metadata( $this->thumbnailId, $imageData );
 
   }
 
