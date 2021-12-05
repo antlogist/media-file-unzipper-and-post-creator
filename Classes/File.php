@@ -1,6 +1,8 @@
 <?php
 
+require_once plugin_dir_path( __FILE__ ) . 'FileHelper.php';
 require_once plugin_dir_path( __FILE__ ) . 'Render.php';
+require_once plugin_dir_path( __FILE__ ) . 'PostPdf.php';
 
 class File {
   private static $dir ;
@@ -9,6 +11,7 @@ class File {
   private static $numFiles;
   private static $zip;
   private static $allowedFileTypes = ['application/pdf'];
+  private static $maxFiles = 5;
 
   private static function init() {
     //Get upload directory with year and month
@@ -48,7 +51,7 @@ class File {
     $zip = new ZipArchive;
 
     //Attempt to open the zip file.
-    if(!$zip->open(self::$file)) {
+    if($zip->open(self::$file) !== true) {
 
       $message[] = (object)[
         'type' => 'error',
@@ -61,6 +64,17 @@ class File {
     }
 
     self::$numFiles = $zip->numFiles;
+
+    if(self::$numFiles > self::$maxFiles) {
+      $message[] = (object)[
+        'type' => 'error',
+        'text' => 'Files quantity must be no greater than ' . $maxFiles . '.'
+      ];
+
+      $zip->close();
+      Render::message($message);
+      exit;
+    }
 
     //Extract zip if it can be open
     $zip->extractTo(self::$dir);
@@ -87,18 +101,36 @@ class File {
   private static function addToLibAndPost() {
     for($i=0; $i < self::$numFiles; $i++) {
 
+      $message = [];
+      $message[] = (object)[
+        'type' => 'info',
+        'text' => '========================'
+      ];
+      Render::message($message);
+
+      $title = preg_replace('/\.[^.]+$/', '', self::$zip->getNameIndex($i));
+
+      if(!FileHelper::isTitleUnique($title)) {
+        $message = [];
+        $message[] = (object)[
+          'type' => 'error',
+          'text' => 'File title: ' . $title . ' not unique'
+        ];
+        Render::message($message);
+      }
+
       //Get the URL of the media file.
-      $fileName = wp_upload_dir()['url'] . '/' . self::$zip->getNameIndex($i);
+      $fileUrl = wp_upload_dir()['url'] . '/' . self::$zip->getNameIndex($i);
 
       $message = [];
       $message[] = (object)[
         'type' => 'info',
-        'text' => 'File url: ' . $fileName
+        'text' => 'File url: ' . $fileUrl
       ];
       Render::message($message);
 
       //Get the file type
-      $fileType 	= wp_check_filetype( basename( $fileName ), null );
+      $fileType 	= wp_check_filetype( basename( $fileUrl ), null );
 
       $message = [];
       $message[] = (object)[
@@ -113,19 +145,21 @@ class File {
         $message = [];
         $message[] = (object)[
           'type' => 'success',
-          'text' => '<a href="' . $fileName . '" target="_blank"> '. $fileName . '</a> File type: ' . $fileType['type']
+          'text' => '<a href="' . $fileUrl . '" target="_blank"> '. $fileUrl . '</a> File type: ' . $fileType['type']
         ];
         Render::message($message);
 
-
         //Attachment information
         $attachment = array(
-          'guid'           => $fileName,
+          'guid'           => $fileUrl,
           'post_mime_type' => $fileType['type'],
-          'post_title'     => preg_replace('/\.[^.]+$/', '', self::$zip->getNameIndex($i)),
+          'post_title'     => $title,
           'post_content'   => '',
           'post_status'    => 'inherit'
         );
+
+        //Absolute path to file
+        $pathToFile = self::$dir . '/' . self::$zip->getNameIndex($i);
 
         //Insert the attachment.
         $attachId = wp_insert_attachment( $attachment, self::$dir . '/' . self::$zip->getNameIndex($i) );
@@ -135,6 +169,26 @@ class File {
 
         //Update metadata for an attachment.
         wp_update_attachment_metadata( $attachId, $attachData );
+
+        //Create post
+        $post = new PostPdf($title, '', 'publish', 1, 'will', 'custom_pdf', $fileUrl, $pathToFile);
+        $postId = $post->createPost();
+
+        if($postId) {
+          $message = [];
+          $message[] = (object)[
+            'type' => 'success',
+            'text' => 'Post was successfully created. ID ' . $postId
+          ];
+          Render::message($message);
+        } else {
+          $message = [];
+          $message[] = (object)[
+            'type' => 'error',
+            'text' => 'Post was not successfully created. Something went wrong...'
+          ];
+          Render::message($message);
+        }
 
       } else {
 
