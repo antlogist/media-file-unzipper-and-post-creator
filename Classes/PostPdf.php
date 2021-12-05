@@ -18,7 +18,7 @@ class PostPdf extends Post {
 
   private function insertPost() {
     $postData = array(
-      'post_title'    => $this->postTitle,
+      'post_title'    => $this->transformTitle(),
       'post_type'     => $this->postType,
       'post_content'  => $this->postContent,
       'post_status'   => $this->postStatus,
@@ -32,6 +32,18 @@ class PostPdf extends Post {
 
     $this->postId = wp_insert_post($postData);
 
+  }
+
+  private function transformTitle() {
+
+    $title;
+
+    if(strpos($this->postTitle, "PROB-")) {
+      $arr = explode("PROB-", $this->postTitle);
+      $title = $arr[0];
+      return $title;
+    }
+    return $this->postTitle;
   }
 
   private function createThumbnail() {
