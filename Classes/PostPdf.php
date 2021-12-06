@@ -68,6 +68,7 @@ class PostPdf extends Post {
     $imgUrl = str_replace('(', '', $imgUrl);
     $imgUrl = str_replace(')', '', $imgUrl);
     $imgUrl = str_replace('.', '-', $imgUrl);
+    $imgUrl = str_replace('  ', '-', $imgUrl);
     $imgUrl = str_replace(' ', '-', $imgUrl);
     $imgUrl = $imgUrl . '-pdf-724x1024.jpg';
     $this->imgUrl = $imgUrl;
