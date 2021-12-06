@@ -47,6 +47,7 @@ class PostPdf extends Post {
   private function transformTitle() {
 
     $title;
+    $ref;
 
     if(strpos($this->postTitle, "PROB-")) {
       $arr = explode("PROB-", $this->postTitle);
@@ -58,6 +59,16 @@ class PostPdf extends Post {
       $this->year = preg_replace("/[^0-9]/", '', $arr[0]);
 
       return $title;
+    } elseif (strpos($this->postTitle, "PROB ")) {
+        $arr = explode("PROB ", $this->postTitle);
+        $title = $arr[0];
+        $ref = $arr[1];
+
+        $this->ref = "PROB-" . $ref;
+
+        $this->year = preg_replace("/[^0-9]/", '', $arr[0]);
+
+        return $title;
     }
     return $this->postTitle;
   }
