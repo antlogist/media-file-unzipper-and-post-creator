@@ -55,7 +55,6 @@ class PostPdf extends Post {
 
       $this->ref = "PROB-" . $ref;
 
-      // preg_match_all('!\d+!', $arr[0], $this->year);
       $this->year = preg_replace("/[^0-9]/", '', $arr[0]);
 
       return $title;
