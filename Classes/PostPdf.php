@@ -9,7 +9,8 @@ class PostPdf extends Post {
   protected $postId = 0;
   protected $imgUrl;
   protected $thumbnailId;
-  protected $ref = "-";
+  protected $ref = "";
+  protected $heldby = "";
 
   function __construct($postTitle, $postContent, $postStatus, $postAuthor, $postType = 'will', $customPdf = 'custom_pdf', $pdfFileUrl = '', $pathToFile = '') {
     parent::__construct($postTitle, $postContent, $postStatus, $postAuthor);
@@ -28,7 +29,8 @@ class PostPdf extends Post {
       'post_author'   => $this->postAuthor,
       'meta_input'    => array(
         $this->customPdf  => $this->pdfFileUrl,
-        "will_ref" => $this->ref
+        "will_ref" => $this->ref,
+        "will_heldby" => $this->heldby
       )
     );
 
