@@ -11,6 +11,7 @@ class PostPdf extends Post {
   protected $thumbnailId;
   protected $ref = "";
   protected $heldby = "";
+  protected $year = "";
 
   function __construct($postTitle, $postContent, $postStatus, $postAuthor, $postType = 'will', $customPdf = 'custom_pdf', $pdfFileUrl = '', $pathToFile = '') {
     parent::__construct($postTitle, $postContent, $postStatus, $postAuthor);
@@ -30,7 +31,8 @@ class PostPdf extends Post {
       'meta_input'    => array(
         $this->customPdf  => $this->pdfFileUrl,
         "will_ref" => $this->ref,
-        "will_heldby" => $this->heldby
+        "will_heldby" => $this->heldby,
+        "will_year" => $this->year
       )
     );
 
@@ -53,6 +55,9 @@ class PostPdf extends Post {
 
       $this->ref = "PROB-" . $ref;
 
+      // preg_match_all('!\d+!', $arr[0], $this->year);
+      $this->year = preg_replace("/[^0-9]/", '', $arr[0]);
+
       return $title;
     }
     return $this->postTitle;
@@ -61,6 +66,8 @@ class PostPdf extends Post {
   private function transformIntoUrl() {
     $imgUrl = str_replace('[', '', $this->postTitle);
     $imgUrl = str_replace(']', '', $imgUrl);
+    $imgUrl = str_replace('(', '', $imgUrl);
+    $imgUrl = str_replace(')', '', $imgUrl);
     $imgUrl = str_replace('.', '-', $imgUrl);
     $imgUrl = str_replace(' ', '-', $imgUrl);
     $imgUrl = $imgUrl . '-pdf-724x1024.jpg';
