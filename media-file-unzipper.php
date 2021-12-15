@@ -8,7 +8,7 @@
  * Author URI: https://podlesnyy.ru
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
