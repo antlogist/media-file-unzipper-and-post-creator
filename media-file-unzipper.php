@@ -12,15 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-if ( !defined( 'MEDIA_FILE_UNZIPPER_DIRNAME' ) ) {
+if ( ! defined( 'MEDIA_FILE_UNZIPPER_DIRNAME' ) ) {
   define( 'MEDIA_FILE_UNZIPPER_DIRNAME', plugin_basename( dirname( __FILE__ ) ) );
 }
 
-if ( !defined( 'MEDIA_FILE_UNZIPPER' ) ) {
+if ( ! defined( 'MEDIA_FILE_UNZIPPER' ) ) {
   define('MEDIA_FILE_UNZIPPER', '2.0.0');
 }
 
-if (!class_exists('UnzipFile')) {
+if ( ! class_exists( 'UnzipFile' ) ) {
 
   require_once plugin_dir_path( __FILE__ ) . 'Classes/Render.php';
   require_once plugin_dir_path( __FILE__ ) . 'Classes/File.php';
