@@ -12,11 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-if (!defined('MEDIA_FILE_UNZIPPER_DIRNAME')) {
-  define('MEDIA_FILE_UNZIPPER_DIRNAME', plugin_basename(dirname(__FILE__)));
+if ( !defined( 'MEDIA_FILE_UNZIPPER_DIRNAME' ) ) {
+  define( 'MEDIA_FILE_UNZIPPER_DIRNAME', plugin_basename( dirname( __FILE__ ) ) );
 }
 
-if (!defined('MEDIA_FILE_UNZIPPER')) {
+if ( !defined( 'MEDIA_FILE_UNZIPPER' ) ) {
   define('MEDIA_FILE_UNZIPPER', '2.0.0');
 }
 
@@ -30,7 +30,7 @@ if (!class_exists('UnzipFile')) {
     private $slug = 'add_pdf_zip';
 
     function __construct() {
-      add_action('admin_menu', array($this, 'addMenuPage'));
+      add_action( 'admin_menu', array( $this, 'addMenuPage' ) );
     }
 
     public function addMenuPage() {
@@ -39,15 +39,15 @@ if (!class_exists('UnzipFile')) {
         'Upload PDF',
         'manage_options',
         $this->slug ,
-        array($this, 'pluginInit'),
+        array( $this, 'pluginInit' ),
         'dashicons-media-archive',
         10);
     }
 
     public function pluginInit() {
-      Render::form($this->slug);
+      Render::form( $this->slug );
 
-      if(isset($_FILES['fileToUpload'])) {
+      if( isset( $_FILES['fileToUpload'] ) ) {
         $this->unzipAndPost();
       }
     }
