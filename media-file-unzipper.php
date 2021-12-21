@@ -30,11 +30,18 @@ if (!class_exists('UnzipFile')) {
     private $slug = 'add_pdf_zip';
 
     function __construct() {
-      add_action('admin_menu', array(&$this, 'addMenuItem'));
+      add_action('admin_menu', array($this, 'addMenuPage'));
     }
 
-    public function addMenuItem() {
-      add_menu_page('Upload PDF', 'Upload PDF','manage_options', $this->slug , array($this, 'pluginInit'),'dashicons-media-archive', 10);
+    public function addMenuPage() {
+      add_menu_page(
+        'Upload PDF',
+        'Upload PDF',
+        'manage_options',
+        $this->slug ,
+        array($this, 'pluginInit'),
+        'dashicons-media-archive',
+        10);
     }
 
     public function pluginInit() {
