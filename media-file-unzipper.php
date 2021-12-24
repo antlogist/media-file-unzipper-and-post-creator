@@ -39,12 +39,12 @@ if ( ! class_exists( 'UnzipFile' ) ) {
         'Upload PDF',
         'manage_options',
         $this->slug ,
-        array( $this, 'pluginInit' ),
+        array( $this, 'pluginRender' ),
         'dashicons-media-archive',
         10);
     }
 
-    public function pluginInit() {
+    public function pluginRender() {
       Render::form( $this->slug );
 
       if( isset( $_FILES['fileToUpload'] ) ) {
