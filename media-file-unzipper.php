@@ -35,13 +35,13 @@ if ( ! class_exists( 'UnzipFile' ) ) {
 
     public function addMenuPage() {
       add_menu_page(
-        'Upload PDF',
-        'Upload PDF',
-        'manage_options',
-        $this->slug ,
-        array( $this, 'pluginRender' ),
-        'dashicons-media-archive',
-        10);
+        'Upload PDF',                   //page_title
+        'Upload PDF',                   //menu_title
+        'manage_options',               //capability
+        $this->slug ,                   //menu_slug
+        array( $this, 'pluginRender' ), //callback_function
+        'dashicons-media-archive',      //icon
+        10);                            //position
     }
 
     public function pluginRender() {
