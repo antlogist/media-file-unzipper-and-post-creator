@@ -12,15 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-if (!defined('MEDIA_FILE_UNZIPPER_DIRNAME')) {
-  define('MEDIA_FILE_UNZIPPER_DIRNAME', plugin_basename(dirname(__FILE__)));
+if ( ! defined( 'MEDIA_FILE_UNZIPPER_DIRNAME' ) ) {
+  define( 'MEDIA_FILE_UNZIPPER_DIRNAME', plugin_basename( dirname( __FILE__ ) ) );
 }
 
-if (!defined('MEDIA_FILE_UNZIPPER')) {
+if ( ! defined( 'MEDIA_FILE_UNZIPPER' ) ) {
   define('MEDIA_FILE_UNZIPPER', '2.0.0');
 }
 
-if (!class_exists('UnzipFile')) {
+if ( ! class_exists( 'UnzipFile' ) ) {
 
   require_once plugin_dir_path( __FILE__ ) . 'Classes/Render.php';
   require_once plugin_dir_path( __FILE__ ) . 'Classes/File.php';
@@ -30,17 +30,24 @@ if (!class_exists('UnzipFile')) {
     private $slug = 'add_pdf_zip';
 
     function __construct() {
-      add_action('admin_menu', array(&$this, 'addMenuItem'));
+      add_action( 'admin_menu', array( $this, 'addMenuPage' ) );
     }
 
-    public function addMenuItem() {
-      add_menu_page('Upload PDF', 'Upload PDF','manage_options', $this->slug , array($this, 'pluginInit'),'dashicons-media-archive', 10);
+    public function addMenuPage() {
+      add_menu_page(
+        'Upload PDF',                   //page_title
+        'Upload PDF',                   //menu_title
+        'manage_options',               //capability
+        $this->slug ,                   //menu_slug
+        array( $this, 'pluginRender' ), //callback_function
+        'dashicons-media-archive',      //icon
+        10);                            //position
     }
 
-    public function pluginInit() {
-      Render::form($this->slug);
+    public function pluginRender() {
+      Render::form( $this->slug );
 
-      if(isset($_FILES['fileToUpload'])) {
+      if( isset( $_FILES['fileToUpload'] ) ) {
         $this->unzipAndPost();
       }
     }
